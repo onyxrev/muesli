@@ -12,10 +12,14 @@ module Muesli
     protected
 
     def can?(*args)
+      return false unless user
+
       ability.can? *args
     end
 
     def cannot?(*args)
+      return true unless user
+
       ability.cannot *args
     end
   end

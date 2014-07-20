@@ -35,7 +35,9 @@ end
   => {:created_at => Tue, 28 June 2014 16:42:40 UTC +00:00, :due_at => Tue, 2 July 2014 16:42:40 UTC +00:00, :completed_at => nil, :task => "Mow the car.", :priority => 2}
 ```
 
-## Include CanCan Support
+## CanCan Support (Valentine Example)
+
+### ValentineSerializer
 
 ```ruby
 class ValentineSerializer < Muesli::BaseSerializer
@@ -50,12 +52,23 @@ class ValentineSerializer < Muesli::BaseSerializer
     serialized_hash = super
 
     # add private attributes only for the owner
-    if user and can? :update, model
+    if can? :update, model
       serialized_hash.extend! serialize_attributes([
         :crush_name,
         :favorite_candy
       ])
     end
+
+    serialized_hash
+  end
+end
+```
+
+### Valentine
+```ruby
+class Valentine < ActiveRecord::Base
+  def serializer
+    ValentineSerializer.new(self)
   end
 end
 ```
