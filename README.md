@@ -39,6 +39,9 @@ end
 
 ### ValentineSerializer
 
+You can do pretty much whatever you want by overriding the serialize method.  I recommend doing so to interject the addition of conditional data.  A perfect example is checking for authorization before including anything deemed private, like the name of your crush and their favorite candy (don't tell Steve.)
+
+
 ```ruby
 class ValentineSerializer < Muesli::Serializers::Base
   include Muesli::Adapters::CanCan
@@ -53,10 +56,10 @@ class ValentineSerializer < Muesli::Serializers::Base
 
     # add private attributes only for the owner
     if can? :update, model
-      serialized_hash.merge!(serialize_attributes([
-        :crush_name,
-        :favorite_candy
-      ]))
+      serialized_hash.merge!({
+        :crush          => CrushSerializer.new(model.crush).serialize,
+        :favorite_candy => model.candy
+      })
     end
 
     serialized_hash
@@ -85,6 +88,8 @@ end
 
   => {:created_at => Tue, 10 February 2014 16:42:40 UTC +00:00, :codename => "Whisper Smileface", :crush_name => "Steve Buscemi", :favorite_candy => "Macaroon"}
 ```
+
+I do recommend that you keep your serializers simple and flat. If you need nested structures or if your serializer is getting big - break it out into smaller serializers and delegate to them.
 
 ## Custom Attribute Serializers
 
