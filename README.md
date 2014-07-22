@@ -112,12 +112,28 @@ Now whenever Muesli encounters a Money class attribute it routes it through your
 ```ruby
 module Muesli
   module AttributeSerializers
-    class Money
+    class Money < Base
       def serialize
         {
           :currency   => @value.currency_as_string,
           :fractional => @value.fractional
         }
+      end
+    end
+  end
+end
+```
+
+Or maybe you have Paperclip attachments you'd like each attachment to be serialized to its URL...
+
+```ruby
+module Muesli
+  module AttributeSerializers
+    class Paperclip
+      class Attachment < Base
+        def serialize
+          @value.present? ? @value.url : nil
+        end
       end
     end
   end
