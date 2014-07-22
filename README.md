@@ -3,6 +3,10 @@ Muesli
 
 Provides serialization of models into hashes with attribute whitelisting and authorization for passing to views or as an API response.
 
+Why would you want this?
+
+Well, just calling .to_json on a model exposes a lot of unfiltered information and many complex objects don't serialize into JSON very intuitively.  Muesli provides serializers at the model level for conditionally whitelisting attributes and provides serializers at the attribute level for converting class types into the ideal data structure representation for your views or API responses.
+
 ## ToDo Example
 
 ### TodoSerializer
