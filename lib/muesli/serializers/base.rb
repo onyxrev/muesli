@@ -22,9 +22,18 @@ module Muesli
       end
 
       def serialize_attributes(attribute_source, attribute_list)
-        return attribute_list.reduce({}) do |memo, attr|
-          memo[attr] = serialize_value( attribute_source.send(attr) )
-          memo
+        return attribute_list.map do |attr|
+          map_from_source(attribute_source, attr)
+        end.compact.to_h
+      end
+
+      def map_from_source(attribute_source, attr)
+        if attribute_source.respond_to?(attr)
+          begin
+            [ attr, serialize_value( attribute_source.send(attr) ) ]
+          rescue ActiveModel::MissingAttributeError
+            nil
+          end
         end
       end
 
